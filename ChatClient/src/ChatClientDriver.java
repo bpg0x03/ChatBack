@@ -1,49 +1,43 @@
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
+import java.awt.event.ActionListener;
+import java.awt.event.*;
+public class ChatClientDriver{
 
-public class ChatClientDriver extends Application{
-	private GreetWindow greetWindow = new GreetWindow();
-	private ChatWindow chatWindow = new ChatWindow();
-    
-	public static void main(String[] args) {
-		Application.launch(args);
-	}
+    private static GreetWindow greetWindow = new GreetWindow();
+    private static ChatWindow chatWindow = new ChatWindow();
 
 	
-	public void start(Stage primaryStage) {
-		greetWindow.displayWindow();
-		greetWindow.getBtSubmit().setOnAction(new EventHandler<ActionEvent>() {//finds when the button is pressed
+	public  static void main(String[] args) {
+
+
+
+		greetWindow.show();
+		greetWindow.getBtSubmit().addActionListener(new ActionListener() {//finds when the button is pressed
 			
-			public void handle(ActionEvent e) {
-				
+			public void actionPerformed(ActionEvent e) {
+				String name = greetWindow.getName().getText();
+				String ip = greetWindow.getIp().getText();
+				chatWindow.setName(name);
+				chatWindow.setIp(ip);
+
 				greetWindow.closeWindow();
-				//launches the second window
-				chatWindow.setName(greetWindow.getName());
-				chatWindow.setIp(greetWindow.getName());
-				chatWindow.displayWindow();
+				chatWindow.show();
 				
 				//firstListener
-				chatWindow.setOnKeyPressed(new EventHandler<KeyEvent> () { //checks for when enter is pressed
-					public void handle(KeyEvent f) {
-						switch (f.getCode()) {
-						case ENTER:
-							String userInput = chatWindow.getInputText();
-							chatWindow.write(userInput);
-						default:
-							break;
-						}
-					}
+				chatWindow.getTfInput().addActionListener(new ActionListener(){
 
-				});
+					public void actionPerformed(ActionEvent e){
+						String userInput = chatWindow.getInputText();
+						chatWindow.write(userInput);
+
+					}});
 				
 				//second listener
-				chatWindow.getBtDisconnect().setOnAction(new EventHandler<ActionEvent>() {
-					public void handle(ActionEvent h) {
+				chatWindow.getBtDisconnect().addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
 						chatWindow.disconnect();
 					}
+
 				});
 			}
 		});

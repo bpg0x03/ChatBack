@@ -1,71 +1,66 @@
 import java.io.IOException;
+import java.awt.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JTextArea;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
 
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
-public class ChatWindow extends VBox{
-	private HBox topHBox = new HBox();
-	private HBox botHBox = new HBox();
-	private TextArea taChatBox = new TextArea();
-	private TextField tfInput = new TextField();
-	private Button btDisconnect = new Button("Disconnect ");
-	private Stage mStage = new Stage();
+public class ChatWindow {
+	private JFrame stage = new JFrame();
+	private JTextArea taChatBox = new JTextArea();
+	private JTextField tfInput = new JTextField();
+	private JButton btDisconnect = new JButton("Disconnect ");
+
 	private String name = "";
 	private static final int chatBoxWidth = 500;
 	private static final int sceneWidth = 500;
 	private static final int sceneHeight = 200;
-	
+
 	public ChatClientHandler client;
 	private String ip = "127.0.0.1";
 	private int port = 8081;
 
-	public ChatWindow() { 
-		tfInput.setPrefWidth(chatBoxWidth-100);
-		taChatBox.setPrefWidth(chatBoxWidth);
+	public ChatWindow() {
+		stage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		stage.getContentPane().setLayout(new BoxLayout(stage.getContentPane(), BoxLayout.Y_AXIS));
 		taChatBox.setEditable(false);
-		taChatBox.setPadding(new Insets(5,5,5,5));
 
-		topHBox.getChildren().addAll(taChatBox);
-		botHBox.getChildren().addAll(tfInput, btDisconnect);
+		taChatBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+		stage.getContentPane().add(taChatBox);
 
-		this.getChildren().addAll(topHBox, botHBox);
-		
-		client = new ChatClientHandler(ip, port, taChatBox);
-	}
-	
-	public void displayWindow() {
-		Scene scene = new Scene(this, sceneWidth, sceneHeight);
-		mStage.setTitle("Chatting as " + name);
-		mStage.setScene(scene);
-		mStage.show();
-		client.connect();
-		client.open();
-		client.start();
+		tfInput.setAlignmentX(Component.CENTER_ALIGNMENT);
+		stage.getContentPane().add(tfInput);
+
+		btDisconnect.setAlignmentX(Component.CENTER_ALIGNMENT);
+		stage.getContentPane().add(btDisconnect);
+
 	}
 
-	public Button getBtDisconnect() {
+
+	public JTextField getTfInput() {
+		return tfInput;
+	}
+
+	public JButton getBtDisconnect() {
 		return btDisconnect;
 	}
-	
+
 	public void setName(String n) {
 		this.name = n;
 	}
-	
-	public void setIp(String ip){
+
+	public void setIp(String ip) {
 		this.ip = ip;
 	}
-	
+
 	public String getInputText() {
 		return name + ": " + tfInput.getText();
 	}
-	
-	public void write(String text){
+
+	public void write(String text) {
 		try {
 			client.send(text);
 		} catch (IOException e) {
@@ -74,14 +69,30 @@ public class ChatWindow extends VBox{
 		}
 		tfInput.setText("");
 	}
-	
+
 	public void disconnect() {
 		client.close();
 		client.stop();
 		closeWindow();
 	}
-	
+
 	public void closeWindow() {
-		mStage.close();
+		stage.dispose();
+	}
+
+
+	public void show(){
+		stage.setPreferredSize(new Dimension(chatBoxWidth, chatBoxWidth - 100));
+		//tfInput.setPreferredSize(new Dimension(chatBoxWidth-100,50));
+		taChatBox.setPreferredSize(new Dimension(chatBoxWidth-25, chatBoxWidth-50));
+		stage.setTitle("Chatting as " + name);
+		stage.pack();
+		stage.setVisible(true);
+
+		client = new ChatClientHandler(ip, port, taChatBox);
+
+		client.connect();
+		client.open();
+		client.start();
 	}
 }

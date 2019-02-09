@@ -1,30 +1,37 @@
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import java.awt.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
 
-public class GreetWindow extends HBox{
-	private TextField input = new TextField();
-	private TextField tfIp = new TextField();
-	private Button btSubmit = new Button("Submit");
+public class GreetWindow{
+	private JTextField input = new JTextField("Enter your name here");
+	private JTextField tfIp = new JTextField("Enter server IP here");
+	private JButton btSubmit = new JButton("Submit");
 	private String ip = "";
-	private Stage stage = new Stage();
+	private JFrame stage = new JFrame("ChatBack Chat Client");
 	private String name = "";
-	public static final int width = 225;
-	public static final int height = 50;
+	public static final int width = 500;
+	public static final int height = 500;
 	
 	public GreetWindow() { //uselses consturctor
-		VBox vBox = new VBox();
-		vBox.getChildren().addAll(tfIp, input);
-		this.getChildren().addAll(vBox, btSubmit);
-		input.setText("Enter your name here");
-		tfIp.setText("Enter server Ip here");
+		stage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		stage.getContentPane().setLayout(new BoxLayout(stage.getContentPane(),BoxLayout.Y_AXIS));
+
+		input.setAlignmentX(Component.CENTER_ALIGNMENT);
+		stage.getContentPane().add(input);
+
+		tfIp.setAlignmentX(Component.CENTER_ALIGNMENT);
+		stage.getContentPane().add(tfIp);
+
+		btSubmit.setAlignmentX(Component.CENTER_ALIGNMENT);
+		stage.getContentPane().add(btSubmit);
+
 	}
+
 	
 	
-	public Button getBtSubmit() {
+	public JButton getBtSubmit() {
 		return btSubmit;
 	}
 
@@ -37,28 +44,25 @@ public class GreetWindow extends HBox{
 		this.ip = ip;
 	}
 	
-	public String getIp(){
-		return ip;
+	public JTextField getIp(){
+		return tfIp;
 	}
 
 
-	public String getName() {
-		return name;
+	public JTextField getName() {
+		return input;
 	}
 	
 	public void closeWindow() {
 		setName(input.getText());
 		setIp(tfIp.getText());
-		stage.close();
+		stage.dispose();
 	}
 	
-	public void displayWindow() {
-		
-		Scene scene = new Scene(this, width, height );
-		stage.setTitle("Please enter your name");
-		stage.setScene(scene);
-		stage.show();
-		
+	public void show(){
+		stage.setPreferredSize(new Dimension(300,125));
+		stage.pack();
+		stage.setVisible(true);
 	}
 	
 	

@@ -1,8 +1,12 @@
 import java.net.*;
 import java.io.*;
-
-import javafx.application.Platform;
-import javafx.scene.control.TextArea;
+import java.awt.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JTextArea;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 public class ChatClientHandler implements Runnable{
 
@@ -10,11 +14,11 @@ public class ChatClientHandler implements Runnable{
 	private Socket socket;
 	private int port;
 	private String ip;
-	private TextArea field;
+	private JTextArea field;
 	private DataInputStream fromClient = null;
 	private DataOutputStream toClient = null;
 
-	public ChatClientHandler(String ip, int port, TextArea textField){
+	public ChatClientHandler(String ip, int port, JTextArea textField){
 		socket = new Socket();
 		this.port = port;
 		this.ip = ip;
@@ -26,10 +30,10 @@ public class ChatClientHandler implements Runnable{
 		while(thread != null){
 			try {
 				final String text = fromClient.readUTF() + "\n";	//links local variables (textArea) to ChatWindow
-				Platform.runLater(new Runnable() {
+				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						field.appendText(text);
+						field.append(text);
 					}
 				});
 				// System.out.println(server.chat);
